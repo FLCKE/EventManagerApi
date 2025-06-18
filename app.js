@@ -5,11 +5,12 @@ import authRoutes from "./routes/authRoutes.js"
 import eventRoutes from "./routes/eventRoutes.js"
 import notificationRoutes from "./routes/notificationRoutes.js"
 import registrationRoutes from "./routes/registrationRoutes.js"
+import rateLimiter from "./middlewares/rate-limiter.js"
 const app = express();
 app.use(express.json()); // Middleware pour parser le JSON dans les requêtes
 
 app.use(cors({ origin: "http://localhost:5000", credentials: true })); // Middleware pour activer CORS
-
+app.use(rateLimiter);
 
 app.get("/", (req, res) => {
     res.send("API OK ✅");
