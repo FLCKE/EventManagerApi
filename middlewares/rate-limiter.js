@@ -3,7 +3,7 @@ import rateLimit from "express-rate-limit";
 // Créer l'instance UNE SEULE FOIS lors de l'initialisation
 const rateLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5, // limite à 100 requêtes par windowMs
+    max: 50, // limite à 100 requêtes par windowMs
     message: {
         error: "Trop de requêtes depuis cette IP, réessayez dans 15 minutes."
     },

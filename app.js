@@ -6,6 +6,8 @@ import eventRoutes from "./routes/eventRoutes.js"
 import notificationRoutes from "./routes/notificationRoutes.js"
 import registrationRoutes from "./routes/registrationRoutes.js"
 import rateLimiter from "./middlewares/rate-limiter.js"
+import favoriteRoutes from "./routes/favoriteRoutes.js";
+import paymentRoutes from './routes/paymentRoutes.js';
 const app = express();
 app.use(express.json()); // Middleware pour parser le JSON dans les requêtes
 
@@ -15,7 +17,8 @@ app.use(rateLimiter);
 app.get("/", (req, res) => {
     res.send("API OK ✅");
 });
-
+app.use('/api/payment', paymentRoutes);
+app.use("/api/favorites", favoriteRoutes);
 app.use("/api/user", userRoutes); // Assurez-vous que le chemin est correct
 app.use("/api/auth", authRoutes); // Assurez-vous que le chemin est correct
 app.use("/api/event", eventRoutes); // Assurez-vous que le chemin est correct

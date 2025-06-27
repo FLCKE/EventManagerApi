@@ -1,7 +1,39 @@
 import Event from '../models/eventModel.js';
 
 export const getAllEvents = async (req, res) => {
-  const events = await Event.find().populate('createdBy', 'name email');
+    const { page , limit,dateLimit, location} = req.query;
+    const now = new Date();
+    // Filtre de base : événements à venir
+    let filter = { date: { $gte: now } };
+    // Si des paramètres de date ou de localisation sont fournis, les ajouter au filtre
+    if (dateLimit) {
+      filter.date = { $gte: dateLimit };
+    }
+    if (location) {
+  filter.location = location;
+  }
+    if (page && limit) {
+      const skip = (page - 1) * limit;
+      const total = await Event.countDocuments();
+      const totalPages = Math.ceil(total / limit);
+      const events = await Event.find(filter)
+        .skip(skip)
+        .limit(limit)
+        .populate('createdBy', 'name email');
+      return res.json({
+        events,
+        total,
+        totalPages,
+        currentPage: parseInt(page),
+        limit: parseInt(limit)
+      });
+    }
+    if (dateLimit || location) {
+      const events = await Event.find(filter).populate('createdBy', 'name email');
+      return res.json(events);
+    }
+  // If no pagination, return all events
+  const events = await Event.find().populate('createdBy', 'name email role');
   res.json(events);
 };
 

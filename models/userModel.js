@@ -25,6 +25,10 @@ const userSchema = new Schema({
     enum: ['participant', 'organizer'],
     default: 'participant'
     },
+    favorites: [{
+    type: String,
+    ref: 'Event'
+    }],
     createdAt: {
         type: Date,
         default: Date.now
