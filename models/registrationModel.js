@@ -8,7 +8,7 @@ const registrationSchema = new mongoose.Schema({
   },
   userId: {
     type: String,
-    ref: 'User',
+    ref: 'Users',
     required: true
   },
   eventId: {

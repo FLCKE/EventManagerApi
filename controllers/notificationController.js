@@ -3,7 +3,7 @@ import Notification from '../models/notificationModel.js';
 export const getUserNotifications = async (req, res) => {
   const notifications = await Notification.find({
     $or: [
-      { userId: req.user.id },
+      { userId: req.user.id, read: false }, // Notifications for the current user that are unread
       { userId: null }
     ]
   });

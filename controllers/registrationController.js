@@ -1,3 +1,4 @@
+import Event from '../models/eventModel.js';
 import Registration from '../models/registrationModel.js';
 
 export const getUserRegistrations = async (req, res) => {
@@ -20,6 +21,57 @@ export const getUserRegistrations = async (req, res) => {
   const registrations = await Registration.find(filter).populate('eventId');
   res.json(registrations);
 };
+export const getRegisterByOrganizer = async (req, res) => {
+  const organizerId = req.params.id;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  if (!organizerId) {
+    return res.status(400).json({ message: 'Organizer ID is required' });
+  }
+  const events = await Event.find({ createdBy: organizerId });
+  if (!events || events.length === 0) {
+    return res.status(404).json({ message: 'No events found for this organizer' });
+  }
+  const eventIds = events.map(event => event._id);
+
+  // Agrégation pour regrouper par participant
+  const registrations = await Registration.aggregate([
+    { $match: { eventId: { $in: eventIds } } },
+    {
+      $group: {
+        _id: "$userId",
+        registrations: { $push: "$eventId" }
+      }
+    }
+  ]);
+
+  // Pagination sur les participants
+  const total = registrations.length;
+  const totalPages = Math.ceil(total / limit);
+  const paginated = registrations.slice((page - 1) * limit, page * limit);
+
+  // Peupler les infos utilisateur et événements
+  const result = await Promise.all(paginated.map(async (item) => {
+    const user = await Registration.populate(
+      { userId: item._id },
+      { path: "userId", select: "name email phone" }
+    );
+    const events = await Event.find({ _id: { $in: item.registrations } }).select("title");
+    return {
+      user: user.userId,
+      events
+    };
+  }));
+
+  res.json({
+    register: result,
+    total,
+    totalPages,
+    currentPage: page,
+    limit
+  });
+};
+ 
 
 export const registerToEvent = async (req, res) => {
   const { eventId,id } = req.body;

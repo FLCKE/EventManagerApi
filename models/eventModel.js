@@ -15,7 +15,18 @@ const eventSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
+  capacity: {
+    type: Number,
+    required: true
+  },
+  price: {
+    type: Number,
+    required: true
+  },
   location: String,
+  imageUrl: {
+    type: String,
+  },
   createdBy: {
     type: String,
     ref: 'Users',

@@ -11,6 +11,10 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    phone: {
+        type: String,
+        required: false
+    },
     email: {
         type: String,
         unique: true,
@@ -20,15 +24,14 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    imageUrl: {
+        type: String,
+    },
     role: {
     type: String,
     enum: ['participant', 'organizer'],
     default: 'participant'
-    },
-    favorites: [{
-    type: String,
-    ref: 'Event'
-    }],
+    },  
     createdAt: {
         type: Date,
         default: Date.now
