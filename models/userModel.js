@@ -28,10 +28,14 @@ const userSchema = new Schema({
         type: String,
     },
     role: {
-    type: String,
-    enum: ['participant', 'organizer'],
-    default: 'participant'
-    },  
+        type: String,
+        enum: ['participant', 'organizer'],
+        default: 'participant'
+    },
+    favorites: [{
+        type: String,
+        ref: 'Event'
+    }],
     createdAt: {
         type: Date,
         default: Date.now
