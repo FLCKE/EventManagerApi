@@ -1,3 +1,4 @@
+import { swaggerUi, swaggerSpec } from "./swagger.js";
 import express from "express";
 import cors from "cors";
 import userRoutes from "./routes/userRoutes.js"; // Assurez-vous que le chemin est correct
@@ -30,4 +31,5 @@ app.use("/api/event", eventRoutes); // Assurez-vous que le chemin est correct
 app.use("/api/registration", registrationRoutes); // Assurez-vous que le chemin est correct
 app.use("/api/notification", notificationRoutes); // Assurez-vous que le chemin est correct
 app.use('/api/stat', statRoutes); // Assurez-vous que le chemin est correct
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 export default app; // Exporter l'application Express pour l'utiliser dans d'autres fichiers
